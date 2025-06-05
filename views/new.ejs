@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Submit a Note</title>
+</head>
+<body>
+  <h1>Submit a Note</h1>
+  <form action="/notes/new" method="POST">
+    <label for="title">Note Title:</label><br>
+    <input type="text" id="title" name="title" placeholder="New Note" required><br><br>
+
+    <label for="content">Note Content:</label><br>
+    <textarea id="content" name="content" rows="10" cols="50" placeholder="Please enter note details here" required></textarea><br><br>
+
+    <button type="submit" class="btn btn-primary">Save Note</button>
+  </form>
+</body>
+</html>
+
+
+<!-- To Do - Make Form to Save Note -->

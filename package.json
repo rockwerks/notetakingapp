@@ -1,0 +1,33 @@
+{
+    "name": "express-auth-demo",
+    "version": "1.0.0",
+    "description": "Express authentication demo with PassportJS and Google OAuth",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "dependencies": {
+        "chai": "^5.2.0",
+        "connect-mongo": "^5.1.0",
+        "dotenv": "^16.5.0",
+        "ejs": "^3.1.9",
+        "express": "^4.21.2",
+        "express-session": "^1.17.3",
+        "mongodb": "^6.17.0",
+        "mongoose": "^8.15.1",
+        "passport": "^0.6.0",
+        "passport-google": "^0.1.0",
+        "passport-google-oauth20": "^2.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    },
+    "directories": {
+        "test": "test"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs"
+}
