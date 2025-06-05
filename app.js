@@ -16,7 +16,7 @@ async function main() {
   const app = express();
   const client = await mongoose
     .connect(
-      "mongodb+srv://Rockwerks:dncC73AEAA4mvtO0@rockwerkscluster01.04nzply.mongodb.net/my-notes-app?retryWrites=true&w=majority",
+      process.env.MONGODB,
       { useNewUrlParser: true, useUnifiedTopology: true }
     )
     .then((client) => {
