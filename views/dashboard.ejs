@@ -13,7 +13,7 @@
       <% if (user) { %>
         <div class="user-profile">
           <% if (user.photo) { %>
-            <img src="<%= user.photo %>" alt="Profile Picture" class="profile-pic">
+            <img src="<%= profile.avatar %>" alt="Profile Picture" class="profile-pic">
           <% } %>
           <h2>Welcome, <%= user.displayName %>!</h2>
           <p>Email: <%= user.email %></p>

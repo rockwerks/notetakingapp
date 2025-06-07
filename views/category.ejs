@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Notes powered by Rockwerks</title>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h4><%= category %> Notes</h4>
+        
+        <!-- Back to all notes link -->
+        <a href="/notes" class="btn btn-secondary">← Back to All Notes</a>
+        
+        <% if (notes && notes.length > 0) { %>
+            <div class="notes-grid">
+                <% notes.forEach(note => { %>
+                    <div class="note-card">
+                        <h6><a href="/notes/<%= note._id %>"><%= note.title %></a></h6>
+                        <p class="note-content"><%= note.content.substring(0, 100) %>...</p>
+                        <div class="note-meta">
+                            <span class="category-tag"><%= note.category %></span>
+                            <span class="date"><%= note.createdAt.toDateString() %></span>
+                        </div>
+                        <div class="note-actions">
+                            <a href="/notes/<%= note._id %>/edit" class="btn btn-sm">Edit</a>
+                            <a href="/notes/<%= note._id %>/delete" class="btn btn-sm btn-danger">Delete</a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                <p>No notes found in the "<%= category %>" category.</p>
+                <a href="/notes/new" class="btn btn-primary">Create First Note</a>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

@@ -2,11 +2,13 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const Note = require('../models/noteSchema');
+const { ObjectId } = require('mongodb');
 const { isLoggedIn } = require('../middleware/auth');
 
 router.get('/', isLoggedIn, async (req, res) => {
 try {
   const notes = await Note.find({ owner: req.user.id});
+  console.log(notes)
   res.render('index', {notes, user: req.user});
   } catch (error) {
     res.status(500).json({message: error.message});
@@ -28,6 +30,7 @@ router.post('/new', isLoggedIn, async (req, res) => {
   try {
     res.redirect('/notes/')
      const newNote = new Note({
+      owner: req.user.id,
       title: req.body.title,
       content: req.body.content
     })
@@ -39,7 +42,8 @@ console.log(error)
 
 
 router.get('/:id', isLoggedIn, async (req, res) => {
-  res.send(':id', {notes, user: req.user})
+  const notes = await Note.findById(req.params.userID)
+  res.render(':id', {notes, user: req.user})
   try {
     const note = await Note.findByID(req.params.id);
   } catch (error) {
@@ -49,37 +53,71 @@ router.get('/:id', isLoggedIn, async (req, res) => {
 });
 
 
+
 router.get('/:id/edit', isLoggedIn, async (req, res) => {
-  res.send(':id/edit', {notes, user: req.user})
   try {
-    const editNote = await Note.findByIdAndUpdate(req.params.id);
+    const getNote = await Note.findById(req.params.id)
+    res.render('edit', {user: req.user, noteID: req.params.id, note: getNote})
     } catch (error) {
-      console.log("error");
+      console.log(error);
     }
   }
 )
   // Show edit form
 
-router.put('/update/:id', isLoggedIn, async (req, res) => {
-  res.send('update', {notes, user: req.user})
+router.post('/update/:id', isLoggedIn, async (req, res) => {
+ 
   try {
-    const updateNote = await Note.findByIdAndUpdate
+    console.log(req.body)
+    const { title, content, category } = req.body
+    const updatedNote = await Note.findByIdAndUpdate(
+      req.params.id,
+      { title, content, category },
+      { new: true }
+    )
+    console.log(updatedNote)
+    res.redirect('/notes')
   } catch (error) {
     console.log("error")
   }
 });
 
 
-router.delete('/:id', isLoggedIn, async (req, res) => {
-  res.delete('delete', {notes, user: req.user})
+router.post('/:id/delete', isLoggedIn, async (req, res) => {
   try {
-    const deleteNote = await Note.findByIdAndDelete
+   console.log(req.params.id)
+   await Note.findByIdAndDelete(req.params.id)
+    // const deleteNote = await Note.findByIdAndDelete
+    res.redirect('/notes')
   } catch (error) {
     console.log("error")
   }
   // Delete note
 });
 
-
+router.get('/category/:category', isLoggedIn, async (req, res) => {
+  try {
+    const { category } = req.params.body;
+    const userId = req.user.id; // Assuming user info is attached by isLoggedIn middleware
+    
+    // Query notes by category for the logged-in user
+    const notes = await Note.find({ 
+      category: category,
+      userId: userId // Ensure users only see their own notes
+    }).sort({ createdAt: -1 }); // Sort by newest first
+    
+    res.render('notes/category', { 
+      notes: notes,
+      category: category,
+      title: `${category} Notes`
+    });
+    
+  } catch (error) {
+    console.error('Error fetching notes by category:', error);
+    res.status(500).render('error', { 
+      message: 'Error loading category notes' 
+    });
+  }
+});
 
 module.exports = router;

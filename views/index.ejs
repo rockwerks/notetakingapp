@@ -9,44 +9,21 @@
 </head>
 <body>
 <h1>My Notes</h1>
-<a href="/notes/new" class="btn btn-primary">New Note</a>
+<a href="/notes/new" class="btn btn-primary">New Note</a> <a href="/category" class="btn btn-primary">Category</a>
 <div id="notesList">
+<%notes.forEach(note => {%>
+<h5><%= note.title%></h5>
+<div id="notesEdit"
+<p><%= note.content%></p>
+<a href="/notes/<%= note._id%>/edit">
+    <button type="submit">Edit</button></a>
 
-<script>
-  async function fetchNotes() {
-    const res = await fetch('/api/notes');
-    const notes = await res.json();
-    const list = document.getElementById('notesList');
-    list.innerHTML = '';
-    notes.forEach(note => {
-      list.innerHTML += `
-        <div class="note">
-          <div class="note-title">${note.title}</div>
-          <div>${note.content}</div>
-        </div>`;
-    });
-  }
+<form action="<%= note._id%>/delete" method="POST" style="display: inline;">
+    <button type="submit">Delete</button>
+</form>
 
-  document.getElementById('noteForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const title = document.getElementById('title').value;
-    const content = document.getElementById('content').value;
 
-    await fetch('/api/notes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, content })
-    });
-
-    document.getElementById('noteForm').reset();
-    fetchNotes();
-  });
-
-  // Initial load
-  fetchNotes();
-</script>
+<% }) %>
 </div>
 </body>
 </html>
-
-

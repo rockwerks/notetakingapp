@@ -10,7 +10,6 @@ const passport = require("passport");
 const path = require("path");
 const { isLoggedIn } = require("./middleware/auth");
 require("dotenv").config();
-require("./config/passport");
 
 async function main() {
   const app = express();
@@ -68,7 +67,7 @@ async function main() {
             // Create new user
             user = new User({
               userID: profile.id,
-              name: profile.displayName,
+              displayName: profile.displayName,
               email: profile.emails[0].value,
               avatar: profile.photos[0].value,
             });
@@ -112,6 +111,30 @@ async function main() {
   app.get("/index", isLoggedIn, (req, res) => {
     res.render("index", { user: req.user });
   });
+
+  app.get('/category/:category', isLoggedIn, async (req, res) => {
+  try {
+    const category = req.params.category;
+    
+    // Get notes for this category
+    const notes = await Note.find({ 
+      category: category,
+      userId: req.user.id 
+    }).sort({ createdAt: -1 });
+    
+    // Make sure to pass ALL required variables
+    res.render('category', { 
+      category: category,        // ← This was missing
+      notes: notes,
+      title: `${category} Notes`,
+      user: req.user
+    });
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error loading category notes');
+  }
+});
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
