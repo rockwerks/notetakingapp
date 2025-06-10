@@ -2,9 +2,9 @@ const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const Note = require('./models/noteSchema');
-const User = require('./models/userSchema');
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const Note = require("./models/noteSchema");
+const User = require("./models/userSchema");
 // const { MongoClient } = require('mongodb');
 const passport = require("passport");
 const path = require("path");
@@ -14,10 +14,10 @@ require("dotenv").config();
 async function main() {
   const app = express();
   const client = await mongoose
-    .connect(
-      process.env.MONGODB,
-      { useNewUrlParser: true, useUnifiedTopology: true }
-    )
+    .connect(process.env.MONGODB, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
     .then((client) => {
       console.log("Connected to MongoDB");
       return client;
@@ -112,29 +112,28 @@ async function main() {
     res.render("index", { user: req.user });
   });
 
-  app.get('/category/:category', isLoggedIn, async (req, res) => {
-  try {
-    const category = req.params.category;
-    
-    // Get notes for this category
-    const notes = await Note.find({ 
-      category: category,
-      userId: req.user.id 
-    }).sort({ createdAt: -1 });
-    
-    // Make sure to pass ALL required variables
-    res.render('category', { 
-      category: category,        // ← This was missing
-      notes: notes,
-      title: `${category} Notes`,
-      user: req.user
-    });
-    
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error loading category notes');
-  }
-});
+  app.get("/category/:category", isLoggedIn, async (req, res) => {
+    try {
+      const category = req.params.category;
+
+      // Get notes for this category
+      const notes = await Note.find({
+        category: category,
+        userID: req.user.id,
+      }).sort({ createdAt: -1 });
+
+      // Make sure to pass ALL required variables
+      res.render("category", {
+        category: category, // ← This was missing
+        notes: notes,
+        title: `${category} Notes`,
+        user: req.user,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error loading category notes");
+    }
+  });
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {

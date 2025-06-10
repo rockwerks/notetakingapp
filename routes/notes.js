@@ -8,7 +8,6 @@ const { isLoggedIn } = require('../middleware/auth');
 router.get('/', isLoggedIn, async (req, res) => {
 try {
   const notes = await Note.find({ owner: req.user.id});
-  console.log(notes)
   res.render('index', {notes, user: req.user});
   } catch (error) {
     res.status(500).json({message: error.message});
@@ -52,15 +51,15 @@ router.get('/:id', isLoggedIn, async (req, res) => {
   // Get a specific note
 });
 
-
-
 router.get('/:id/edit', isLoggedIn, async (req, res) => {
+   let getNote = undefined;
   try {
-    const getNote = await Note.findById(req.params.id)
-    res.render('edit', {user: req.user, noteID: req.params.id, note: getNote})
+    getNote = await Note.findById(req.params.id)
     } catch (error) {
       console.log(error);
+      return;
     }
+    res.render('edit', {user: req.user, noteID: req.params.id, note: getNote, category: getNote.category})
   }
 )
   // Show edit form
@@ -68,14 +67,14 @@ router.get('/:id/edit', isLoggedIn, async (req, res) => {
 router.post('/update/:id', isLoggedIn, async (req, res) => {
  
   try {
-    console.log(req.body)
+    console.log(req.params.id, req.body)
     const { title, content, category } = req.body
     const updatedNote = await Note.findByIdAndUpdate(
       req.params.id,
       { title, content, category },
       { new: true }
     )
-    console.log(updatedNote)
+    // console.log(updatedNote)
     res.redirect('/notes')
   } catch (error) {
     console.log("error")
@@ -97,21 +96,12 @@ router.post('/:id/delete', isLoggedIn, async (req, res) => {
 
 router.get('/category/:category', isLoggedIn, async (req, res) => {
   try {
-    const { category } = req.params.body;
-    const userId = req.user.id; // Assuming user info is attached by isLoggedIn middleware
+    const category = req.params.body;
     
     // Query notes by category for the logged-in user
-    const notes = await Note.find({ 
-      category: category,
-      userId: userId // Ensure users only see their own notes
-    }).sort({ createdAt: -1 }); // Sort by newest first
-    
-    res.render('notes/category', { 
-      notes: notes,
-      category: category,
-      title: `${category} Notes`
-    });
-    
+    const notes = await Note.find(category).sort({ createdAt: -1 }); // Sort by newest first
+    res.render('notes/category');
+ 
   } catch (error) {
     console.error('Error fetching notes by category:', error);
     res.status(500).render('error', { 
@@ -119,5 +109,6 @@ router.get('/category/:category', isLoggedIn, async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;

@@ -17,14 +17,14 @@
     <textarea id="content" name="content" rows="10" cols="50" required><%= note.content%></textarea><br><br>
 
     <label for="category">Category:</label>
-                <select id="category" name="category" required>
-                    <option value="">Select a category</option>
-                    <option value="work">Work</option>
-                    <option value="personal">Personal</option>
-                    <option value="ideas">Ideas</option>
-                    <option value="todos">To-dos</option>
-                    <option value="other">Other</option>
-                </select>
+                <select name="category">
+                  <option value="work" selected="<%=note.category === 'work'%>">Work</option>
+                  <option value="personal" selected="<%=note.category === 'personal'%>">Personal</option>
+                  <option value="ideas" selected="<%=note.category === 'ideas'%>">Ideas</option>
+                  <option value="todos" selected="<%=note.category === 'todos'%>">TODOs</option>
+                <option value="other" selected="<%=note.category === 'other'%>">Other</option>
+</select>
+
 
     <button type="submit" class="btn btn-primary">Save</button>
   </form>

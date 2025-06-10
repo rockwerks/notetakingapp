@@ -5,4 +5,5 @@ function isLoggedIn(req, res, next) {
   res.redirect('/dashboard');
 }
 
+
 module.exports = { isLoggedIn };
