@@ -111,7 +111,9 @@ async function main() {
   app.get("/index", isLoggedIn, (req, res) => {
     res.render("index", { user: req.user });
   });
-
+  app.get("/category", isLoggedIn, async (req, res) => {
+    res.redirect("category/personal")
+  })
   app.get("/category/:category", isLoggedIn, async (req, res) => {
     try {
       const category = req.params.category;
@@ -119,7 +121,7 @@ async function main() {
       // Get notes for this category
       const notes = await Note.find({
         category: category,
-        userID: req.user.id,
+        owner: req.user.id,
       }).sort({ createdAt: -1 });
 
       // Make sure to pass ALL required variables
