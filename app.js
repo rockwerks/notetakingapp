@@ -13,6 +13,8 @@ require("dotenv").config();
 
 async function main() {
   const app = express();
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   const client = await mongoose
     .connect(process.env.MONGODB, {
       useNewUrlParser: true,

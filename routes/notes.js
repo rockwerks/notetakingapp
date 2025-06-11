@@ -24,18 +24,20 @@ router.get(
       res.status(400).json.apply({ message: error.message });
     }
   }
-  // Create a new note
+  
 );
-
+// Create a new note
 router.post("/new", isLoggedIn, async (req, res) => {
+  console.log(req.body)
   try {
-    res.redirect("/notes/");
     const newNote = new Note({
       owner: req.user.id,
       title: req.body.title,
       content: req.body.content,
+      category: req.body.category
     });
     await newNote.save();
+    res.redirect("/notes/");
   } catch (error) {
     console.log(error);
   }
