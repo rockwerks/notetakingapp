@@ -100,11 +100,13 @@ async function main() {
   // Routes
   app.use("/", require("./routes/auth"));
   app.use("/notes", require("./routes/notes"));
+  app.use("/api", require("./routes/api"));
+
+  app.get("/test", (req, res) => res.render("test", { user: req.user }));
 
   app.get("/", (req, res) => {
     res.render("login", { user: req.user });
   });
-
   app.get("/dashboard", isLoggedIn, (req, res) => {
     res.render("dashboard", { user: req.user });
   });
@@ -112,8 +114,8 @@ async function main() {
     res.render("index", { user: req.user });
   });
   app.get("/category", isLoggedIn, async (req, res) => {
-    res.redirect("category/personal")
-  })
+    res.redirect("category/personal");
+  });
   app.get("/category/:category", isLoggedIn, async (req, res) => {
     try {
       const category = req.params.category;

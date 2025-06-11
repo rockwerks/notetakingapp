@@ -1,0 +1,67 @@
+
+<button id="get-button">GET</button>
+<div>
+  <button id="post-button">POST</button>
+</div>
+
+  <div class="container">
+    <h1>Express Authentication Demo</h1>
+    <div class="auth-box">
+      <h2>Login with OAuth</h2>
+      <p>This demo shows how to implement Google OAuth authentication with PassportJS.</p>
+      
+      <div class="auth-buttons">
+        <a href="/auth/google">
+          <img src="/google-logo.png" alt="Google Logo">
+          Login with Google
+        </a>
+      </div>
+      
+      <% if (user) { %>
+        <div class="user-info">
+          <p>You're already logged in as: <%= user.displayName %></p>
+          <a href="/api">Go to Dashboard</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", (evt) => {
+    // Do you stuff here
+    document
+      .getElementById("get-button")
+      .addEventListener("click", async () => {
+        let response;
+        try {
+          response = await fetch(
+            `http://localhost:3000/api/notes`
+          );
+          if (!response.ok) {
+            console.warn("Uh oh");
+            return;
+          }
+        } catch (error) {}
+        const json = await response.json();
+        console.log(json);
+      });
+
+    document
+      .getElementById("post-button")
+      .addEventListener("click", async () => {
+        let response;
+        try {
+          response = await fetch(
+            `http://localhost:3000/api/notes`
+          );
+          if (!response.ok) {
+            console.warn("Uh oh");
+            return;
+          }
+        } catch (error) {}
+        const json = await response.json();
+        console.log(json);
+      });
+  });
+</script>
